@@ -110,6 +110,38 @@ static struct s3c2410_uartcfg my6410_uartcfgs[] __initdata = {
 	},
 };
 
+static struct gpio_led my6410_leds[] = {
+	[0] = {
+		.name = "LED1",
+		.gpio = S3C64XX_GPM(0),
+	},
+	[1] = {
+		.name = "LED2",
+		.gpio = S3C64XX_GPM(1),
+	},
+	[2] = {
+		.name = "LED3",
+		.gpio = S3C64XX_GPM(2),
+	},
+	[3] = {
+		.name = "LED4",
+		.gpio = S3C64XX_GPM(3),
+	},
+};
+
+static struct gpio_led_platform_data my6410_gpio_led_pdata = {
+	.num_leds = ARRAY_SIZE(my6410_leds),
+	.leds = my6410_leds,
+};
+
+static struct platform_device my6410_device_led = {
+	.name = "leds-gpio",
+	.id = -1,
+	.dev = {
+		.platform_data = &my6410_gpio_led_pdata,
+	},
+};
+
 /* framebuffer and LCD setup. */
 
 /* GPF15 = LCD backlight control
@@ -293,6 +325,7 @@ static struct platform_device *my6410_devices[] __initdata = {
 	&s3c_device_rtc,
 	&s3c_device_ts,
 	&s3c_device_wdt,
+	&my6410_device_led,
 };
 
 #ifdef CONFIG_REGULATOR
