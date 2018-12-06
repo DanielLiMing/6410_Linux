@@ -73,6 +73,11 @@
 #include <plat/backlight.h>
 #include <plat/regs-fb-v4.h>
 
+// #include <linux/mtd/mtd.h>
+// #include <linux/mtd/partitions.h>
+#include <linux/gpio_keys.h>
+
+
 #include "common.h"
 
 #define UCON S3C2410_UCON_DEFAULT | S3C2410_UCON_UCLK
@@ -139,6 +144,63 @@ static struct platform_device my6410_device_led = {
 	.id = -1,
 	.dev = {
 		.platform_data = &my6410_gpio_led_pdata,
+	},
+};
+
+static struct gpio_keys_button my6410_buttons[] = {
+	{
+		.gpio = S3C64XX_GPN(0),
+		.code = KEY_UP,
+		.desc = "Up",
+		.active_low = 1,
+		.wakeup = 0, 
+	},
+	{
+		.gpio = S3C64XX_GPN(1),
+		.code = KEY_DOWN,
+		.desc = "Down",
+		.active_low = 1,
+		.wakeup = 0,
+	},
+	{
+		.gpio = S3C64XX_GPN(2),
+		.code = KEY_LEFT,
+		.desc = "Left",
+		.active_low = 1,
+		.wakeup = 0,
+	},
+	{
+		.gpio = S3C64XX_GPN(3),
+		.code = KEY_RIGHT,
+		.desc = "Right",
+		.active_low = 1,
+		.wakeup = 0,
+	},
+	{
+		.gpio = S3C64XX_GPN(4),
+		.code = KEY_ENTER,
+		.desc = "Enter",
+		.active_low = 1,
+		.wakeup = 0.
+	},
+	{
+		.gpio = S3C64XX_GPN(5),
+		.code = KEY_ESC,
+		.desc = "Esc",
+		.active_low = 1,
+		.wakeup = 0,
+	}
+};
+static struct gpio_keys_platform_data my6410_button_data = {
+	.buttons = my6410_buttons,
+	.nbuttons = ARRAY_SIZE(my6410_buttons),
+};
+
+static struct platform_device my6410_device_button = {
+	.name = "gpio-keys",
+	.id = -1,
+	.dev = {
+		.platform_data = &my6410_button_data,
 	},
 };
 
@@ -326,6 +388,7 @@ static struct platform_device *my6410_devices[] __initdata = {
 	&s3c_device_ts,
 	&s3c_device_wdt,
 	&my6410_device_led,
+	&my6410_device_button,
 };
 
 #ifdef CONFIG_REGULATOR
