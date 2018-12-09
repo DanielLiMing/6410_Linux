@@ -73,9 +73,14 @@
 #include <plat/backlight.h>
 #include <plat/regs-fb-v4.h>
 
+// #include <mach/ts.h>
+#include <mach/dma.h>
+#include <linux/dma-mapping.h>
+// #include <plat/audio.h>
 // #include <linux/mtd/mtd.h>
 // #include <linux/mtd/partitions.h>
 #include <linux/gpio_keys.h>
+#include <linux/dm9000.h>
 
 
 #include "common.h"
@@ -83,6 +88,9 @@
 #define UCON S3C2410_UCON_DEFAULT | S3C2410_UCON_UCLK
 #define ULCON S3C2410_LCON_CS8 | S3C2410_LCON_PNONE | S3C2410_LCON_STOPB
 #define UFCON S3C2410_UFCON_RXTRIG8 | S3C2410_UFCON_FIFOMODE
+
+#define S3C64XX_PA_DM9000	(0x18000000)
+#define S3C64XX_SZ_DN9000	SZ_1M
 
 static struct s3c2410_uartcfg my6410_uartcfgs[] __initdata = {
 	[0] = {
@@ -202,6 +210,39 @@ static struct platform_device my6410_device_button = {
 	.dev = {
 		.platform_data = &my6410_button_data,
 	},
+};
+
+static struct resource my6410_dm9000_resources[] = {
+	[0] = {
+		.start	= S3C64XX_PA_DM9000,
+		.end	= S3C64XX_PA_DM9000 + 3,
+		.flags	= IORESOURCE_MEM,
+	},
+	[1] = {
+		.start	= S3C64XX_PA_DM9000 + 4,
+		.end	= S3C64XX_PA_DM9000 + S3C64XX_SZ_DN9000 -1,
+		.flags	= IORESOURCE_MEM,
+	},
+	[2] = {
+		.start	= IRQ_EINT(7),
+		.end	= IRQ_EINT(7),
+		.flags	= IORESOURCE_IRQ|IRQF_TRIGGER_HIGH,
+	},
+};
+
+static struct dm9000_plat_data my6410_dm9000_platdata = {
+	.flags = DM9000_PLATF_16BITONLY,
+	.dev_addr = {0x08,0x90,0x00,0xa0,0x90,0x90},
+};
+static struct platform_device my6410_device_dm9000 = {
+	.name	= "dm9000",
+	.id		= 0,
+	.num_resources = ARRAY_SIZE(my6410_dm9000_resources),
+	.resource = my6410_dm9000_resources,
+	.dev	= {
+		.platform_data = &my6410_dm9000_platdata,
+	},
+
 };
 
 /* framebuffer and LCD setup. */
@@ -389,7 +430,7 @@ static struct platform_device *my6410_devices[] __initdata = {
 #endif
 	&my6410_lcd_powerdev,
 
-	&my6410_smsc911x,
+	// &my6410_smsc911x,
 	&s3c_device_adc,
 	&s3c_device_cfcon,
 	&s3c_device_rtc,
@@ -397,6 +438,7 @@ static struct platform_device *my6410_devices[] __initdata = {
 	&s3c_device_wdt,
 	&my6410_device_led,
 	&my6410_device_button,
+	&my6410_device_dm9000,
 };
 
 #ifdef CONFIG_REGULATOR
