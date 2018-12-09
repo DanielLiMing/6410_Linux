@@ -68,12 +68,12 @@
 #include <plat/devs.h>
 #include <plat/cpu.h>
 #include <plat/adc.h>
-#include <plat/ts.h>
+// #include <plat/ts.h>
 #include <plat/keypad.h>
 #include <plat/backlight.h>
 #include <plat/regs-fb-v4.h>
 
-// #include <mach/ts.h>
+#include <mach/ts.h>
 #include <mach/dma.h>
 #include <linux/dma-mapping.h>
 // #include <plat/audio.h>
@@ -243,6 +243,21 @@ static struct platform_device my6410_device_dm9000 = {
 		.platform_data = &my6410_dm9000_platdata,
 	},
 
+};
+
+// static struct s3c_ts_info s3c_ts_platform __initdata = {
+// 	.delay		= 10000,
+// 	.presc 		= 49,
+// 	.oversampling_shift 	= 2,
+// 	.resol_bit	= 12,
+// 	.s3c_adc_con	= ADC_TYPE_2,
+// };
+static struct s3c_ts_mach_info s3c_ts_platform __initdata = {
+	.delay	=10000,
+	.presc		=49,
+	.oversampling_shift=2,
+	.resol_bit	=12,
+	.s3c_adc_con	=ADC_TYPE_2,
 };
 
 /* framebuffer and LCD setup. */
@@ -417,25 +432,25 @@ static struct platform_device *my6410_devices[] __initdata = {
 	&s3c_device_hsmmc1,
 #endif
 	&s3c_device_i2c0,
-	&s3c_device_i2c1,
+	// &s3c_device_i2c1,
 	&s3c_device_fb,
 	&s3c_device_ohci,
 	&s3c_device_usb_hsotg,
 	&samsung_asoc_dma,
-	&s3c64xx_device_iisv4,
-	&samsung_device_keypad,
+	// &s3c64xx_device_iisv4,
+	// &samsung_device_keypad,
 
 #ifdef CONFIG_REGULATOR
-	&my6410_b_pwr_5v,
+	// &my6410_b_pwr_5v,
 #endif
 	&my6410_lcd_powerdev,
 
 	// &my6410_smsc911x,
-	&s3c_device_adc,
-	&s3c_device_cfcon,
+	// &s3c_device_adc,
+	// &s3c_device_cfcon,
 	&s3c_device_rtc,
 	&s3c_device_ts,
-	&s3c_device_wdt,
+	// &s3c_device_wdt,
 	&my6410_device_led,
 	&my6410_device_button,
 	&my6410_device_dm9000,
@@ -808,7 +823,9 @@ static void __init my6410_machine_init(void)
 
 	samsung_keypad_set_platdata(&my6410_keypad_data);
 
-	s3c24xx_ts_set_platdata(NULL);
+	// s3c24xx_ts_set_platdata(NULL);
+	// s3c_ts_set_platdata(&s3c_ts_platform);
+	s3c_ts_set_platdata(&s3c_ts_platform);
 
 	/* configure nCS1 width to 16 bits */
 

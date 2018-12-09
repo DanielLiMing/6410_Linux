@@ -32,6 +32,7 @@ obj-$(CONFIG_S3C64XX_DMA)	+= dma.o
 obj-y				+= dev-uart.o
 obj-y				+= dev-audio.o
 obj-$(CONFIG_S3C64XX_DEV_SPI)	+= dev-spi.o
+obj-$(CONFIG_TOUCHSCREEN_S3C) 	+= dev-ts.o 
 
 # Device setup
 
