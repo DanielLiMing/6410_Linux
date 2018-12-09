@@ -1564,9 +1564,9 @@ endif	# skip-makefile
 PHONY += FORCE
 FORCE:
 
-# PHONY += move
-# move:
-# 	mv arch/arm/boot/zImage /home/tftproot
+PHONY += move
+move:
+	mv arch/arm/boot/zImage /home/tftproot
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
 .PHONY: $(PHONY)

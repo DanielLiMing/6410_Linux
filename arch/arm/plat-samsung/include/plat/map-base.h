@@ -23,6 +23,7 @@
  */
 
 #define S3C_ADDR_BASE	0xF6000000
+#define S3C_VA_LCD      S3C_ADDR(0x01100000)
 
 #ifndef __ASSEMBLY__
 #define S3C_ADDR(x)	((void __iomem __force *)S3C_ADDR_BASE + (x))
